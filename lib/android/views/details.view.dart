@@ -49,7 +49,7 @@ class DetailsView extends StatelessWidget {
             ),
           ),
           Text(
-            "(17) 98183-4173",
+            "(17) 99999-9999",
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -159,7 +159,7 @@ class DetailsView extends StatelessWidget {
                 model: ContactModel(
                     id: "1",
                     name: "Guilherme Silva",
-                    phone: "(17) 98183-4173",
+                    phone: "(17) 99999-9999",
                     email: "guisilva2512@gmail.com"),
               ),
             ),

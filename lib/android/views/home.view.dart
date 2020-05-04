@@ -34,7 +34,7 @@ class HomeView extends StatelessWidget {
               ),
             ),
             title: Text("Guilherme Silva"),
-            subtitle: Text("(17) 98183-4173"),
+            subtitle: Text("(17) 99999-9999"),
             trailing: FlatButton(
               onPressed: () {
                 Navigator.push(
