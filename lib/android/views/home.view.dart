@@ -1,5 +1,6 @@
 import 'package:contacts_app/android/views/details.view.dart';
 import 'package:contacts_app/android/views/editor-contact.view.dart';
+import 'package:contacts_app/models/contact.model.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -55,8 +56,14 @@ class HomeView extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => EditorContactView()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditorContactView(
+                model: new ContactModel(id: 0),
+              ),
+            ),
+          );
         },
         child: Icon(
           Icons.add,
