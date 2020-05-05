@@ -50,6 +50,13 @@ mixin _$HomeController on _HomeController, Store {
     return _$searchAsyncAction.run(() => super.search(term));
   }
 
+  final _$getContactsAsyncAction = AsyncAction('getContacts');
+
+  @override
+  Future getContacts() {
+    return _$getContactsAsyncAction.run(() => super.getContacts());
+  }
+
   final _$_HomeControllerActionController =
       ActionController(name: '_HomeController');
 

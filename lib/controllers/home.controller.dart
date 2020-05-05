@@ -26,4 +26,12 @@ abstract class _HomeController with Store {
     var data = await repository.search(term);
     contacts.addAll(data);
   }
+
+  @action
+  getContacts() async {
+    final repository = new ContactRepository();
+    contacts = new ObservableList<ContactModel>();
+    var data = await repository.getContacts();
+    contacts.addAll(data);
+  }
 }

@@ -8,6 +8,8 @@ class ContactRepository {
     return openDatabase(
       join(await getDatabasesPath(), DATABASE_NAME),
       onCreate: (db, version) {
+        print('create');
+        print('DATABASE_NAME: ' + DATABASE_NAME);
         db.execute(CREATE_CONTACTS_TABLE_SCRIPT);
         // return db.execute(CREATE_CONTACTS_TABLE_SCRIPT);
       },
@@ -58,6 +60,7 @@ class ContactRepository {
 
   Future<List<ContactModel>> search(String term) async {
     try {
+      print('TABLE_NAME: ' + TABLE_NAME);
       final Database db = await _getDatabase();
       // final List<Map<String, dynamic>> maps =
       //     await db.query(TABLE_NAME, where: "name LIKE '%Guilherme%'");

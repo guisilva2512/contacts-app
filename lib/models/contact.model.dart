@@ -22,6 +22,7 @@ class ContactModel {
   Map<String, dynamic> toMap() {
     return {
       "id": id,
+      "name": name,
       "email": email,
       "phone": phone,
       "image": image,
