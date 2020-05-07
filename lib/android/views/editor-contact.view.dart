@@ -31,6 +31,9 @@ class _EditorContactViewState extends State<EditorContactView> {
   }
 
   create() {
+    widget.model.id = null;
+    widget.model.image = null;
+
     _repository.create(widget.model).then((_) {
       onSucess();
     }).catchError((_) {
@@ -80,6 +83,8 @@ class _EditorContactViewState extends State<EditorContactView> {
             children: <Widget>[
               TextFormField(
                 keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization
+                    .words, // deixa primeira letra de cada palavra maiuscula (na hora de mostrar o teclado)
                 initialValue: widget.model?.name,
                 decoration: InputDecoration(
                   labelText: "Nome",

@@ -17,7 +17,7 @@ class SearchAppBar extends StatelessWidget {
             ? TextField(
                 autocorrect: true,
                 decoration: InputDecoration(labelText: "Pesquisar ..."),
-                onSubmitted: (val) => controller.getContacts(),
+                onSubmitted: (val) => controller.search(val),
               )
             : Text("Meus Contatos"),
       ),

@@ -61,6 +61,7 @@ class ContactRepository {
   Future<List<ContactModel>> search(String term) async {
     try {
       print('TABLE_NAME: ' + TABLE_NAME);
+      print('term: ' + term);
       final Database db = await _getDatabase();
       // final List<Map<String, dynamic>> maps =
       //     await db.query(TABLE_NAME, where: "name LIKE '%Guilherme%'");
@@ -68,10 +69,11 @@ class ContactRepository {
       //     where: "name LIKE '%$term%'"); // SQL Injection
       final List<Map<String, dynamic>> maps = await db.query(
         TABLE_NAME,
-        where: "name LIKE ? OR email LIKE ?",
+        // where: "name LIKE ? OR email LIKE ?",
+        where: "name LIKE ?",
         whereArgs: [
-          "'%$term%'",
-          "'%$term%'",
+          "%$term%",
+          // "'%$term%'",
         ],
       );
 

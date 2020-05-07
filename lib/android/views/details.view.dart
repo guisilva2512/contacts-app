@@ -1,11 +1,81 @@
 import 'package:contacts_app/android/views/address.view.dart';
 import 'package:contacts_app/android/views/editor-contact.view.dart';
+import 'package:contacts_app/android/views/home.view.dart';
+import 'package:contacts_app/android/views/loading.view.dart';
 import 'package:contacts_app/models/contact.model.dart';
+import 'package:contacts_app/repositories/contact.repository.dart';
+import 'package:contacts_app/shared/widgets/contact-details-description.widget.dart';
+import 'package:contacts_app/shared/widgets/contact-details-image.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailsView extends StatelessWidget {
+  final int id;
+  final _repository = ContactRepository();
+
+  DetailsView({@required this.id});
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _repository.getContact(id),
+      builder: (ctx, snapshot) {
+        if (snapshot.hasData) {
+          ContactModel contact = snapshot.data;
+          return page(context, contact);
+        } else {
+          return LoadingView();
+        }
+      },
+    );
+  }
+
+  Widget page(BuildContext context, ContactModel model) {
+    onSuccess() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeView(),
+        ),
+      );
+    }
+
+    delete() {
+      _repository.delete(id).then((onValue) {
+        onSuccess();
+      }).catchError((onError) {
+        onError(onError);
+      });
+    }
+
+    onError(err) {
+      print(err);
+    }
+
+    onDelete() {
+      showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: Text("Exclusão Contato"),
+            content: Text("Deseja excluir este contato?"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Cancelar"),
+              ),
+              FlatButton(
+                onPressed: delete,
+                child: Text("Excluir"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Contato"),
@@ -19,48 +89,14 @@ class DetailsView extends StatelessWidget {
             height: 10,
             width: double.infinity,
           ),
-          Container(
-            height: 200,
-            width: 200,
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(200),
-            ),
-            child: Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                image: DecorationImage(
-                  image: NetworkImage("https://picsum.photos/200/200"),
-                ),
-              ),
-            ),
-          ),
+          ContactDetailsImage(image: model.image),
           SizedBox(
             height: 10,
           ),
-          Text(
-            "Guilherme Silva",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            "(17) 99999-9999",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Text(
-            "guisilva2512@gmail.com",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
+          ContactDetailsDescription(
+            name: model.name,
+            phone: model.phone,
+            email: model.email,
           ),
           SizedBox(
             height: 20,
@@ -73,7 +109,9 @@ class DetailsView extends StatelessWidget {
                 shape: CircleBorder(
                   side: BorderSide.none,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  launch("tel:${model.phone}");
+                },
                 child: Icon(
                   Icons.phone,
                   color: Theme.of(context).accentColor,
@@ -84,7 +122,9 @@ class DetailsView extends StatelessWidget {
                 shape: CircleBorder(
                   side: BorderSide.none,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  launch("mailto:${model.email}");
+                },
                 child: Icon(
                   Icons.email,
                   color: Theme.of(context).accentColor,
@@ -118,13 +158,13 @@ class DetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Rua Olava Guimarães Correa, 492",
+                  model.addressLine1 ?? "Nenhum endereço cadastrado",
                   style: TextStyle(
                     fontSize: 12,
                   ),
                 ),
                 Text(
-                  "São José do Rio Preto - SP",
+                  model.addressLine2 ?? "",
                   style: TextStyle(
                     fontSize: 12,
                   ),
@@ -147,6 +187,22 @@ class DetailsView extends StatelessWidget {
               ),
             ),
           ),
+          // SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Container(
+              width: double.infinity,
+              // height: 50,
+              color: Color(0xFFFF0000),
+              child: FlatButton(
+                onPressed: onDelete,
+                child: Text(
+                  "Excluir Contato",
+                  style: TextStyle(color: Theme.of(context).accentColor),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -156,11 +212,7 @@ class DetailsView extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => EditorContactView(
-                model: ContactModel(
-                    id: 1,
-                    name: "Guilherme Silva",
-                    phone: "(17) 99999-9999",
-                    email: "guisilva2512@gmail.com"),
+                model: model,
               ),
             ),
           );
