@@ -5,8 +5,7 @@ class ContactDetailsDescription extends StatelessWidget {
   final String phone;
   final String email;
 
-  const ContactDetailsDescription({Key key, this.name, this.phone, this.email})
-      : super(key: key);
+  ContactDetailsDescription({this.name, this.phone, this.email});
 
   @override
   Widget build(BuildContext context) {
